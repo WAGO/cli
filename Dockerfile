@@ -46,6 +46,8 @@ ARG GO_STRIP
 ARG CGO_ENABLED
 # VERSION sets the version for the produced binary
 ARG VERSION
+# VERSION sets the platform for the produced binary
+ARG PLATFORM
 RUN --mount=ro --mount=type=cache,target=/root/.cache \
     --mount=from=dockercore/golang-cross:xx-sdk-extras,target=/xx-sdk,src=/xx-sdk \
     --mount=type=tmpfs,target=cli/winresources \
