@@ -3,7 +3,7 @@ title: "Use the Docker command line"
 description: "Docker's CLI command description and usage"
 keywords: "Docker, Docker documentation, CLI, command line, config.json, CLI configuration file"
 redirect_from:
-  - /go/experimental/
+  - /reference/commandline/cli/
   - /engine/reference/commandline/engine/
   - /engine/reference/commandline/engine_activate/
   - /engine/reference/commandline/engine_check/
@@ -24,7 +24,7 @@ redirect_from:
 To list available commands, either run `docker` with no parameters
 or execute `docker help`:
 
-```bash
+```console
 $ docker
 Usage: docker [OPTIONS] COMMAND [ARG...]
        docker [ --help | -v | --version ]
@@ -78,6 +78,7 @@ line:
 | `DOCKER_HOST`                 | Daemon socket to connect to.                                                                                                          |
 | `DOCKER_STACK_ORCHESTRATOR`   | Configure the default orchestrator to use when using `docker stack` management commands.                                              |
 | `DOCKER_TLS_VERIFY`           | When set Docker uses TLS and verifies the remote. This variable is used both by the `docker` CLI and the [`dockerd` daemon](dockerd.md) |
+| `BUILDKIT_PROGRESS`           | Set type of progress output (`auto`, `plain`, `tty`) when [building](build.md) with [BuildKit backend](https://docs.docker.com/build/buildkit/). Use plain to show container output (default `auto`). |
 
 Because Docker is developed using Go, you can also use any environment
 variables used by the Go runtime. In particular, you may find these useful:
@@ -87,7 +88,7 @@ variables used by the Go runtime. In particular, you may find these useful:
 * `NO_PROXY`
 
 These Go environment variables are case-insensitive. See the
-[Go specification](http://golang.org/pkg/net/http/) for details on these
+[Go specification](https://golang.org/pkg/net/http/) for details on these
 variables.
 
 ## Configuration files
@@ -311,6 +312,9 @@ various fields:
 Experimental features provide early access to future product functionality.
 These features are intended for testing and feedback, and they may change
 between releases without warning or can be removed from a future release.
+
+Starting with Docker 20.10, experimental CLI features are enabled by default,
+and require no configuration to enable them.
 
 ### Notary
 

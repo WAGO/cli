@@ -115,8 +115,8 @@ Options with [] may be specified multiple times.
 uses different binaries for the daemon and client. To run the daemon you
 type `dockerd`.
 
-To run the daemon with debug output, use `dockerd -D` or add `"debug": true` to
-the `daemon.json` file.
+To run the daemon with debug output, use `dockerd --debug` or add `"debug": true`
+to [the `daemon.json` file](#daemon-configuration-file).
 
 > **Enabling experimental features**
 > 
@@ -164,7 +164,7 @@ communication with the daemon.
 > supported anymore for security reasons.
 
 On Systemd based systems, you can communicate with the daemon via
-[Systemd socket activation](http://0pointer.de/blog/projects/socket-activation.html),
+[Systemd socket activation](https://0pointer.de/blog/projects/socket-activation.html),
 use `dockerd -H fd://`. Using `fd://` will work perfectly for most setups but
 you can also specify individual sockets: `dockerd -H fd://3`. If the
 specified socket activated files aren't found, then Docker will exit. You can
@@ -174,20 +174,21 @@ find examples of using Systemd socket activation with Docker and Systemd in the
 You can configure the Docker daemon to listen to multiple sockets at the same
 time using multiple `-H` options:
 
-```bash
-# listen using the default unix socket, and on 2 specific IP addresses on this host.
+The example below runs the daemon listenin on the default unix socket, and
+on 2 specific IP addresses on this host:
 
+```console
 $ sudo dockerd -H unix:///var/run/docker.sock -H tcp://192.168.59.106 -H tcp://10.10.10.2
 ```
 
 The Docker client will honor the `DOCKER_HOST` environment variable to set the
 `-H` flag for the client. Use **one** of the following commands:
 
-```bash
+```console
 $ docker -H tcp://0.0.0.0:2375 ps
 ```
 
-```bash
+```console
 $ export DOCKER_HOST="tcp://0.0.0.0:2375"
 
 $ docker ps
@@ -197,7 +198,7 @@ Setting the `DOCKER_TLS_VERIFY` environment variable to any value other than
 the empty string is equivalent to setting the `--tlsverify` flag. The following
 are equivalent:
 
-```bash
+```console
 $ docker --tlsverify ps
 # or
 $ export DOCKER_TLS_VERIFY=1
@@ -210,7 +211,7 @@ precedence over `HTTP_PROXY`.
 
 The Docker client supports connecting to a remote daemon via SSH:
 
-```
+```console
 $ docker -H ssh://me@example.com:22 ps
 $ docker -H ssh://me@example.com ps
 $ docker -H ssh://example.com ps
@@ -267,22 +268,21 @@ when no `-H` was passed in.
 
 Run Docker in daemon mode:
 
-```bash
+```console
 $ sudo <path to>/dockerd -H 0.0.0.0:5555 &
 ```
 
 Download an `ubuntu` image:
 
-```bash
+```console
 $ docker -H :5555 pull ubuntu
 ```
 
 You can use multiple `-H`, for example, if you want to listen on both
 TCP and a Unix socket
 
-```bash
-# Run docker in daemon mode
-$ sudo <path to>/dockerd -H tcp://127.0.0.1:2375 -H unix:///var/run/docker.sock &
+```console
+$ sudo dockerd -H tcp://127.0.0.1:2375 -H unix:///var/run/docker.sock &
 # Download an ubuntu image, use default Unix socket
 $ docker pull ubuntu
 # OR use the TCP port
@@ -307,12 +307,12 @@ devices, one for data and one for metadata. By default, these block devices
 are created automatically by using loopback mounts of automatically created
 sparse files. Refer to [Devicemapper options](#devicemapper-options) below
 for a way how to customize this setup.
-[~jpetazzo/Resizing Docker containers with the Device Mapper plugin](http://jpetazzo.github.io/2014/01/29/docker-device-mapper-resize/)
+[~jpetazzo/Resizing Docker containers with the Device Mapper plugin](https://jpetazzo.github.io/2014/01/29/docker-device-mapper-resize/)
 article explains how to tune your existing setup without the use of options.
 
 The `btrfs` driver is very fast for `docker build` - but like `devicemapper`
 does not share executable memory between devices. Use
-`dockerd -s btrfs -g /mnt/btrfs_partition`.
+`dockerd --storage-driver btrfs --data-root /mnt/btrfs_partition`.
 
 The `zfs` driver is probably not as fast as `btrfs` but has a longer track record
 on stability. Thanks to `Single Copy ARC` shared blocks between clones will be
@@ -395,7 +395,7 @@ not use loopback in production. Ensure your Engine daemon has a
 
 ###### Example:
 
-```bash
+```console
 $ sudo dockerd --storage-opt dm.thinpooldev=/dev/mapper/thin-pool
 ```
 
@@ -406,7 +406,7 @@ device for you.
 
 ###### Example:
 
-```bash
+```console
 $ sudo dockerd --storage-opt dm.directlvm_device=/dev/xvdf
 ```
 
@@ -416,7 +416,7 @@ Sets the percentage of passed in block device to use for storage.
 
 ###### Example:
 
-```bash
+```console
 $ sudo dockerd --storage-opt dm.thinp_percent=95
 ```
 
@@ -426,7 +426,7 @@ Sets the percentage of the passed in block device to use for metadata storage.
 
 ###### Example:
 
-```bash
+```console
 $ sudo dockerd --storage-opt dm.thinp_metapercent=1
 ```
 
@@ -437,7 +437,7 @@ autoextend the available space [100 = disabled]
 
 ###### Example:
 
-```bash
+```console
 $ sudo dockerd --storage-opt dm.thinp_autoextend_threshold=80
 ```
 
@@ -448,7 +448,7 @@ attempts to autoextend the available space [100 = disabled]
 
 ###### Example:
 
-```bash
+```console
 $ sudo dockerd --storage-opt dm.thinp_autoextend_percent=20
 ```
 
@@ -467,7 +467,7 @@ new base device size.
 
 ###### Examples
 
-```bash
+```console
 $ sudo dockerd --storage-opt dm.basesize=50G
 ```
 
@@ -479,7 +479,7 @@ This value affects the system-wide "base" empty filesystem
 that may already be initialized and inherited by pulled images. Typically,
 a change to this value requires additional steps to take effect:
 
- ```bash
+```console
 $ sudo service docker stop
 
 $ sudo rm -rf /var/lib/docker
@@ -502,7 +502,7 @@ much space.
 
 ###### Example
 
-```bash
+```console
 $ sudo dockerd --storage-opt dm.loopdatasize=200G
 ```
 
@@ -520,7 +520,7 @@ this much space.
 
 ###### Example
 
-```bash
+```console
 $ sudo dockerd --storage-opt dm.loopmetadatasize=4G
 ```
 
@@ -531,7 +531,7 @@ options are "ext4" and "xfs". The default is "xfs"
 
 ###### Example
 
-```bash
+```console
 $ sudo dockerd --storage-opt dm.fs=ext4
 ```
 
@@ -541,7 +541,7 @@ Specifies extra mkfs arguments to be used when creating the base device.
 
 ###### Example
 
-```bash
+```console
 $ sudo dockerd --storage-opt "dm.mkfsarg=-O ^has_journal"
 ```
 
@@ -551,7 +551,7 @@ Specifies extra mount options used when mounting the thin devices.
 
 ###### Example
 
-```bash
+```console
 $ sudo dockerd --storage-opt dm.mountopt=nodiscard
 ```
 
@@ -567,7 +567,7 @@ device.
 
 ###### Example
 
-```bash
+```console
 $ sudo dockerd \
       --storage-opt dm.datadev=/dev/sdb1 \
       --storage-opt dm.metadatadev=/dev/sdc1
@@ -585,13 +585,13 @@ data, or even better on an SSD.
 If setting up a new metadata pool it is required to be valid. This can be
 achieved by zeroing the first 4k to indicate empty metadata, like this:
 
-```bash
+```console
 $ dd if=/dev/zero of=$metadata_dev bs=4096 count=1
 ```
 
 ###### Example
 
-```bash
+```console
 $ sudo dockerd \
       --storage-opt dm.datadev=/dev/sdb1 \
       --storage-opt dm.metadatadev=/dev/sdc1
@@ -604,7 +604,7 @@ blocksize is 64K.
 
 ###### Example
 
-```bash
+```console
 $ sudo dockerd --storage-opt dm.blocksize=512K
 ```
 
@@ -620,7 +620,7 @@ returned to the system for other use when containers are removed.
 
 ###### Examples
 
-```bash
+```console
 $ sudo dockerd --storage-opt dm.blkdiscard=false
 ```
 
@@ -632,11 +632,11 @@ Overrides the `udev` synchronization checks between `devicemapper` and `udev`.
 To view the `udev` sync support of a Docker daemon that is using the
 `devicemapper` driver, run:
 
-```bash
+```console
 $ docker info
-[...]
+<...>
 Udev Sync Supported: true
-[...]
+<...>
 ```
 
 When `udev` sync support is `true`, then `devicemapper` and udev can
@@ -650,7 +650,7 @@ results in errors and failures. (For information on these failures, see
 To allow the `docker` daemon to start, regardless of `udev` sync not being
 supported, set `dm.override_udev_sync_check` to true:
 
-```bash
+```console
 $ sudo dockerd --storage-opt dm.override_udev_sync_check=true
 ```
 
@@ -683,7 +683,7 @@ loop trying to remove a busy device.
 
 ###### Example
 
-```bash
+```console
 $ sudo dockerd --storage-opt dm.use_deferred_removal=true
 ```
 
@@ -701,7 +701,7 @@ Error deleting container: Error response from daemon: Cannot destroy container
 To avoid this failure, enable both deferred device deletion and deferred
 device removal on the daemon.
 
-```bash
+```console
 $ sudo dockerd \
       --storage-opt dm.use_deferred_deletion=true \
       --storage-opt dm.use_deferred_removal=true
@@ -741,7 +741,7 @@ the issue.
 
 ###### Example
 
-```bash
+```console
 $ sudo dockerd --storage-opt dm.min_free_space=10%
 ```
 
@@ -757,7 +757,7 @@ ENOSPC and will shutdown filesystem.
 
 ###### Example
 
-```bash
+```console
 $ sudo dockerd --storage-opt dm.xfs_nospace_max_retries=0
 ```
 
@@ -773,7 +773,7 @@ time of writing, the following is the list of `libdm` log levels as well as
 their corresponding levels when output by `dockerd`.
 
 | `libdm` Level | Value | `--log-level` |
-| ------------- | -----:| ------------- |
+|---------------|------:|---------------|
 | `_LOG_FATAL`  |     2 | error         |
 | `_LOG_ERR`    |     3 | error         |
 | `_LOG_WARN`   |     4 | warn          |
@@ -783,7 +783,7 @@ their corresponding levels when output by `dockerd`.
 
 ###### Example
 
-```bash
+```console
 $ sudo dockerd \
       --log-level debug \
       --storage-opt dm.libdm_log_level=7
@@ -799,7 +799,7 @@ By default docker will pick up the zfs filesystem where docker graph
 
 ###### Example
 
-```bash
+```console
 $ sudo dockerd -s zfs --storage-opt zfs.fsname=zroot/docker
 ```
 
@@ -814,30 +814,21 @@ a container with **--storage-opt size** option, docker should ensure the
 
 ###### Example
 
-```bash
+```console
 $ sudo dockerd -s btrfs --storage-opt btrfs.min_space=10G
 ```
 
 #### Overlay2 options
 
-##### `overlay2.override_kernel_check`
-
-Overrides the Linux kernel version check allowing overlay2. Support for
-specifying multiple lower directories needed by overlay2 was added to the
-Linux kernel in 4.0.0. However, some older kernel versions may be patched
-to add multiple lower directory support for OverlayFS. This option should
-only be used after verifying this support exists in the kernel. Applying
-this option on a kernel without this support will cause failures on mount.
-
 ##### `overlay2.size`
 
 Sets the default max size of the container. It is supported only when the
 backing fs is `xfs` and mounted with `pquota` mount option. Under these
-conditions the user can pass any size less then the backing fs size.
+conditions the user can pass any size less than the backing fs size.
 
 ###### Example
 
-```bash
+```console
 $ sudo dockerd -s overlay2 --storage-opt overlay2.size=1G
 ```
 
@@ -959,7 +950,7 @@ By default, the Docker daemon automatically starts `containerd`. If you want to
 control `containerd` startup, manually start `containerd` and pass the path to
 the `containerd` socket using the `--containerd` flag. For example:
 
-```bash
+```console
 $ sudo dockerd --containerd /var/run/dev/docker-containerd.sock
 ```
 
@@ -987,7 +978,7 @@ The following is an example adding 2 runtimes via the configuration:
 
 This is the same example via the command line:
 
-```bash
+```console
 $ sudo dockerd --add-runtime runc=runc --add-runtime custom=/usr/local/bin/my-runc-replacement
 ```
 
@@ -1009,7 +1000,7 @@ is used on cgroup v2 hosts with systemd available.
 
 This example sets the `cgroupdriver` to `systemd`:
 
-```bash
+```console
 $ sudo dockerd --exec-opt native.cgroupdriver=systemd
 ```
 
@@ -1030,13 +1021,13 @@ value is specified on daemon start, on Windows client, the default is
 
 To set the DNS server for all Docker containers, use:
 
-```bash
+```console
 $ sudo dockerd --dns 8.8.8.8
 ```
 
 To set the DNS search domain for all Docker containers, use:
 
-```bash
+```console
 $ sudo dockerd --dns-search example.com
 ```
 
@@ -1162,7 +1153,7 @@ TLS. To configure the client TLS settings used by the daemon can be configured
 using the `--cluster-store-opt` flag, specifying the paths to PEM encoded
 files. For example:
 
-```bash
+```console
 $ sudo dockerd \
     --cluster-advertise 192.168.1.2:2376 \
     --cluster-store etcd://192.168.1.2:2379 \
@@ -1189,7 +1180,7 @@ organization can purchase or build themselves. You can install one or more
 authorization plugins when you start the Docker `daemon` using the
 `--authorization-plugin=PLUGIN_ID` option.
 
-```bash
+```console
 $ sudo dockerd --authorization-plugin=plugin1 --authorization-plugin=plugin2,...
 ```
 
@@ -1210,7 +1201,7 @@ For information about how to create an authorization plugin, refer to the
 ### Daemon user namespace options
 
 The Linux kernel
-[user namespace support](http://man7.org/linux/man-pages/man7/user_namespaces.7.html)
+[user namespace support](https://man7.org/linux/man-pages/man7/user_namespaces.7.html)
 provides additional security by enabling a process, and therefore a container,
 to have a unique range of user and group IDs which are outside the traditional
 user and group range utilized by the host system. Potentially the most important
@@ -1233,14 +1224,14 @@ for `/var/lib/docker/tmp`. The `DOCKER_TMPDIR` and the data directory can be
 set like this:
 
 ```console
-$ DOCKER_TMPDIR=/mnt/disk2/tmp /usr/local/bin/dockerd -D -g /var/lib/docker -H unix:// > /var/lib/docker-machine/docker.log 2>&1
+$ DOCKER_TMPDIR=/mnt/disk2/tmp /usr/local/bin/dockerd --data-root /var/lib/docker -H unix:// > /var/lib/docker-machine/docker.log 2>&1
 ```
 
 or
 
 ```console
 $ export DOCKER_TMPDIR=/mnt/disk2/tmp
-$ /usr/local/bin/dockerd -D -g /var/lib/docker -H unix:// > /var/lib/docker-machine/docker.log 2>&1
+$ /usr/local/bin/dockerd --data-root /var/lib/docker -H unix:// > /var/lib/docker-machine/docker.log 2>&1
 ````
 
 #### Default cgroup parent
@@ -1360,11 +1351,11 @@ This is a full example of the allowed configuration options on Linux:
   "debug": true,
   "default-address-pools": [
     {
-      "base": "172.80.0.0/16",
+      "base": "172.30.0.0/16",
       "size": 24
     },
     {
-      "base": "172.90.0.0/16",
+      "base": "172.31.0.0/16",
       "size": 24
     }
   ],
@@ -1462,7 +1453,7 @@ This is a full example of the allowed configuration options on Linux:
 > daemon startup as a flag.
 > On systems that use `systemd` to start the Docker daemon, `-H` is already set, so
 > you cannot use the `hosts` key in `daemon.json` to add listening addresses.
-> See https://docs.docker.com/engine/admin/systemd/#custom-docker-daemon-options for how
+> See ["custom Docker daemon options"](https://docs.docker.com/config/daemon/systemd/#custom-docker-daemon-options) for how
 > to accomplish this task with a systemd drop-in file.
 
 ##### On Windows
@@ -1554,7 +1545,7 @@ The list of currently supported options that can be reconfigured is this:
   be used to run containers.
 - `authorization-plugin`: it specifies the authorization plugins to use.
 - `allow-nondistributable-artifacts`: Replaces the set of registries to which the daemon will push nondistributable artifacts with a new set of registries.
-- `insecure-registries`: it replaces the daemon insecure registries with a new set of insecure registries. If some existing insecure registries in daemon's configuration are not in newly reloaded insecure resgitries, these existing ones will be removed from daemon's config.
+- `insecure-registries`: it replaces the daemon insecure registries with a new set of insecure registries. If some existing insecure registries in daemon's configuration are not in newly reloaded insecure registries, these existing ones will be removed from daemon's config.
 - `registry-mirrors`: it replaces the daemon registry mirrors with a new set of registry mirrors. If some existing registry mirrors in daemon's configuration are not in newly reloaded registry mirrors, these existing ones will be removed from daemon's config.
 - `shutdown-timeout`: it replaces the daemon's existing configuration timeout with a new timeout for shutting down all containers.
 - `features`: it explicitly enables or disables specific features.

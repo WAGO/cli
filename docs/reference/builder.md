@@ -112,7 +112,7 @@ instructions.
 
 Whenever possible, Docker uses a build-cache to accelerate the `docker build`
 process significantly. This is indicated by the `CACHED` message in the console
-output. (For more information, see the [`Dockerfile` best practices guide](https://docs.docker.com/engine/userguide/eng-image/dockerfile_best-practices/):
+output. (For more information, see the [`Dockerfile` best practices guide](https://docs.docker.com/engine/userguide/eng-image/dockerfile_best-practices/)):
 
 ```console
 $ docker build -t svendowideit/ambassador .
@@ -159,8 +159,8 @@ implementation. For example, BuildKit can:
 To use the BuildKit backend, you need to set an environment variable
 `DOCKER_BUILDKIT=1` on the CLI before invoking `docker build`.
 
-To learn about the experimental Dockerfile syntax available to BuildKit-based
-builds [refer to the documentation in the BuildKit repository](https://github.com/moby/buildkit/blob/master/frontend/dockerfile/docs/experimental.md).
+To learn about the Dockerfile syntax available to BuildKit-based
+builds [refer to the documentation in the BuildKit repository](https://github.com/moby/buildkit/blob/master/frontend/dockerfile/docs/syntax.md).
 
 ## Format
 
@@ -179,7 +179,7 @@ Docker runs instructions in a `Dockerfile` in order. A `Dockerfile` **must
 begin with a `FROM` instruction**. This may be after [parser
 directives](#parser-directives), [comments](#format), and globally scoped
 [ARGs](#arg). The `FROM` instruction specifies the [*Parent
-Image*](https://docs.docker.com/glossary/#parent_image) from which you are
+Image*](https://docs.docker.com/glossary/#parent-image) from which you are
 building. `FROM` may only be preceded by one or more `ARG` instructions, which
 declare arguments that are used in `FROM` lines in the `Dockerfile`.
 
@@ -599,10 +599,10 @@ This file causes the following build behavior:
 
 
 Matching is done using Go's
-[filepath.Match](http://golang.org/pkg/path/filepath#Match) rules.  A
+[filepath.Match](https://golang.org/pkg/path/filepath#Match) rules.  A
 preprocessing step removes leading and trailing whitespace and
 eliminates `.` and `..` elements using Go's
-[filepath.Clean](http://golang.org/pkg/path/filepath/#Clean).  Lines
+[filepath.Clean](https://golang.org/pkg/path/filepath/#Clean).  Lines
 that are blank after preprocessing are ignored.
 
 Beyond Go's filepath.Match rules, Docker also supports a special
@@ -677,7 +677,7 @@ FROM [--platform=<platform>] <image>[@<digest>] [AS <name>]
 ```
 
 The `FROM` instruction initializes a new build stage and sets the
-[*Base Image*](https://docs.docker.com/glossary/#base_image) for subsequent instructions. As such, a
+[*Base Image*](https://docs.docker.com/glossary/#base-image) for subsequent instructions. As such, a
 valid `Dockerfile` must start with a `FROM` instruction. The image can be
 any valid image – it is especially easy to start by **pulling an image** from
 the [*Public Repositories*](https://docs.docker.com/docker-hub/repos/).
@@ -759,6 +759,7 @@ RUN instruction onto the next line. For example, consider these two lines:
 RUN /bin/bash -c 'source $HOME/.bashrc; \
 echo $HOME'
 ```
+
 Together they are equivalent to this single line:
 
 ```dockerfile
@@ -938,6 +939,7 @@ the `--format` option to show just the labels;
 ```console
 $ docker image inspect --format='{{json .Config.Labels}}' myimage
 ```
+
 ```json
 {
   "com.example.vendor": "ACME Incorporated",
@@ -1115,7 +1117,7 @@ directories, their paths are interpreted as relative to the source of
 the context of the build.
 
 Each `<src>` may contain wildcards and matching will be done using Go's
-[filepath.Match](http://golang.org/pkg/path/filepath#Match) rules. For example:
+[filepath.Match](https://golang.org/pkg/path/filepath#Match) rules. For example:
 
 To add all files starting with "hom":
 
@@ -1291,7 +1293,7 @@ directories will be interpreted as relative to the source of the context
 of the build.
 
 Each `<src>` may contain wildcards and matching will be done using Go's
-[filepath.Match](http://golang.org/pkg/path/filepath#Match) rules. For example:
+[filepath.Match](https://golang.org/pkg/path/filepath#Match) rules. For example:
 
 To add all files starting with "hom":
 
@@ -1630,7 +1632,7 @@ If you forget to add `exec` to the beginning of your `ENTRYPOINT`:
 ```dockerfile
 FROM ubuntu
 ENTRYPOINT top -b
-CMD --ignored-param1
+CMD -- --ignored-param1
 ```
 
 You can then run it (giving it a name for the next step):
@@ -1638,12 +1640,15 @@ You can then run it (giving it a name for the next step):
 ```console
 $ docker run -it --name test top --ignored-param2
 
-Mem: 1704184K used, 352484K free, 0K shrd, 0K buff, 140621524238337K cached
-CPU:   9% usr   2% sys   0% nic  88% idle   0% io   0% irq   0% sirq
-Load average: 0.01 0.02 0.05 2/101 7
-  PID  PPID USER     STAT   VSZ %VSZ %CPU COMMAND
-    1     0 root     S     3168   0%   0% /bin/sh -c top -b cmd cmd2
-    7     1 root     R     3164   0%   0% top -b
+top - 13:58:24 up 17 min,  0 users,  load average: 0.00, 0.00, 0.00
+Tasks:   2 total,   1 running,   1 sleeping,   0 stopped,   0 zombie
+%Cpu(s): 16.7 us, 33.3 sy,  0.0 ni, 50.0 id,  0.0 wa,  0.0 hi,  0.0 si,  0.0 st
+MiB Mem :   1990.8 total,   1354.6 free,    231.4 used,    404.7 buff/cache
+MiB Swap:   1024.0 total,   1024.0 free,      0.0 used.   1639.8 avail Mem
+
+  PID USER      PR  NI    VIRT    RES    SHR S  %CPU  %MEM     TIME+ COMMAND
+    1 root      20   0    2612    604    536 S   0.0   0.0   0:00.02 sh
+    6 root      20   0    5956   3188   2768 R   0.0   0.2   0:00.00 top
 ```
 
 You can see from the output of `top` that the specified `ENTRYPOINT` is not `PID 1`.
@@ -1652,12 +1657,12 @@ If you then run `docker stop test`, the container will not exit cleanly - the
 `stop` command will be forced to send a `SIGKILL` after the timeout:
 
 ```console
-$ docker exec -it test ps aux
+$ docker exec -it test ps waux
 
-PID   USER     COMMAND
-    1 root     /bin/sh -c top -b cmd cmd2
-    7 root     top -b
-    8 root     ps aux
+USER       PID %CPU %MEM    VSZ   RSS TTY      STAT START   TIME COMMAND
+root         1  0.4  0.0   2612   604 pts/0    Ss+  13:58   0:00 /bin/sh -c top -b --ignored-param2
+root         6  0.0  0.1   5956  3188 pts/0    S+   13:58   0:00 top -b
+root         7  0.0  0.1   5884  2816 pts/1    Rs+  13:58   0:00 ps waux
 
 $ /usr/bin/time docker stop test
 
@@ -1821,6 +1826,11 @@ RUN pwd
 
 The output of the final `pwd` command in this `Dockerfile` would be
 `/path/$DIRNAME`
+
+If not specified, the default working directory is `/`. In practice, if you aren't building a Dockerfile from scratch (`FROM scratch`), 
+the `WORKDIR` may likely be set by the base image you're using.
+
+Therefore, to avoid unintended operations in unknown directories, it is best practice to set your `WORKDIR` explicitly.
 
 ## ARG
 
@@ -2171,9 +2181,14 @@ ONBUILD RUN /usr/local/bin/python-build --dir /app/src
 STOPSIGNAL signal
 ```
 
-The `STOPSIGNAL` instruction sets the system call signal that will be sent to the container to exit.
-This signal can be a valid unsigned number that matches a position in the kernel's syscall table, for instance 9,
-or a signal name in the format SIGNAME, for instance SIGKILL.
+The `STOPSIGNAL` instruction sets the system call signal that will be sent to the
+container to exit. This signal can be a signal name in the format `SIG<NAME>`,
+for instance `SIGKILL`, or an unsigned number that matches a position in the
+kernel's syscall table, for instance `9`. The default is `SIGTERM` if not
+defined.
+
+The image's default stopsignal can be overridden per container, using the
+`--stop-signal` flag on `docker run` and `docker create`.
 
 ## HEALTHCHECK
 

@@ -26,7 +26,7 @@ amount of disk space used by the docker daemon.
 
 By default the command will just show a summary of the data used:
 
-```bash
+```console
 $ docker system df
 
 TYPE                TOTAL               ACTIVE              SIZE                RECLAIMABLE
@@ -37,7 +37,7 @@ Local Volumes       2                   1                   36 B                
 
 A more detailed view can be requested using the `-v, --verbose` flag:
 
-```bash
+```console
 $ docker system df -v
 
 Images space usage:
@@ -87,7 +87,7 @@ using a Go template.
 Valid placeholders for the Go template are listed below:
 
 | Placeholder    | Description                                |
-| -------------- | ------------------------------------------ |
+|----------------|--------------------------------------------|
 | `.Type`        | `Images`, `Containers` and `Local Volumes` |
 | `.TotalCount`  | Total number of items                      |
 | `.Active`      | Number of active items                     |
@@ -101,7 +101,7 @@ the data exactly as the template declares or, when using the
 The following example uses a template without headers and outputs the
 `Type` and `TotalCount` entries separated by a colon (`:`):
 
-```bash
+```console
 $ docker system df --format "{{.Type}}: {{.TotalCount}}"
 
 Images: 2
@@ -112,7 +112,7 @@ Local Volumes: 1
 To list the disk usage with size and reclaimable size in a table format you
 can use:
 
-```bash
+```console
 $ docker system df --format "table {{.Type}}\t{{.Size}}\t{{.Reclaimable}}"
 
 TYPE                SIZE                RECLAIMABLE
@@ -122,7 +122,7 @@ Local Volumes       150.3 MB            150.3 MB (100%)
 <Paste>
 ```
 
-**Note** the format option is meaningless when verbose is true.
+The format option has no effect when the `--verbose` option is used.
 
 ## Related commands
 * [system prune](system_prune.md)

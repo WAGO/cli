@@ -24,7 +24,7 @@ Options:
 
 To see how the `docker:latest` image was built:
 
-```bash
+```console
 $ docker history docker
 
 IMAGE               CREATED             CREATED BY                                      SIZE                COMMENT
@@ -38,7 +38,7 @@ be51b77efb42        8 days ago          /bin/sh -c apt-get update && apt-get ins
 
 To see how the `docker:apache` image was added to a container's base image:
 
-```bash
+```console
 $ docker history docker:scm
 IMAGE               CREATED             CREATED BY                                      SIZE                COMMENT
 2ac9d1098bf1        3 months ago        /bin/bash                                       241.4 MB            Added Apache to Fedora base image
@@ -54,14 +54,14 @@ using a Go template.
 
 Valid placeholders for the Go template are listed below:
 
-| Placeholder     | Description |
-| --------------- | ----------- |
-| `.ID`           | Image ID    |
+| Placeholder     | Description                                                                                               |
+|-----------------|-----------------------------------------------------------------------------------------------------------|
+| `.ID`           | Image ID                                                                                                  |
 | `.CreatedSince` | Elapsed time since the image was created if `--human=true`, otherwise timestamp of when image was created |
-| `.CreatedAt`    | Timestamp of when image was created |
-| `.CreatedBy`    | Command that was used to create the image |
-| `.Size`         | Image disk size |
-| `.Comment`      | Comment for image |
+| `.CreatedAt`    | Timestamp of when image was created                                                                       |
+| `.CreatedBy`    | Command that was used to create the image                                                                 |
+| `.Size`         | Image disk size                                                                                           |
+| `.Comment`      | Comment for image                                                                                         |
 
 When using the `--format` option, the `history` command will either
 output the data exactly as the template declares or, when using the
@@ -71,7 +71,7 @@ The following example uses a template without headers and outputs the
 `ID` and `CreatedSince` entries separated by a colon (`:`) for the `busybox`
 image:
 
-```bash
+```console
 $ docker history --format "{{.ID}}: {{.CreatedSince}}" busybox
 
 f6e427c148a7: 4 weeks ago

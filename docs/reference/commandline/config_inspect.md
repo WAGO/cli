@@ -23,7 +23,7 @@ Inspects the specified config.
 By default, this renders all results in a JSON array. If a format is specified,
 the given template will be executed for each result.
 
-Go's [text/template](http://golang.org/pkg/text/template/) package
+Go's [text/template](https://golang.org/pkg/text/template/) package
 describes all the details of the format.
 
 For detailed information about using configs, refer to [store configuration data using Docker Configs](https://docs.docker.com/engine/swarm/configs/).
@@ -43,14 +43,14 @@ You can inspect a config, either by its *name*, or *ID*
 
 For example, given the following config:
 
-```bash
+```console
 $ docker config ls
 
 ID                          NAME                CREATED             UPDATED
 eo7jnzguqgtpdah3cm5srfb97   my_config           3 minutes ago       3 minutes ago
 ```
 
-```bash
+```console
 $ docker config inspect config.json
 ```
 
@@ -83,7 +83,7 @@ You can use the --format option to obtain specific information about a
 config. The following example command outputs the creation time of the
 config.
 
-```bash
+```console
 $ docker config inspect --format='{{.CreatedAt}}' eo7jnzguqgtpdah3cm5srfb97
 
 2017-03-24 08:15:09.735271783 +0000 UTC
