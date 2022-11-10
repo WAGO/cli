@@ -124,7 +124,6 @@ jobs:
           DOCKER_GITCOMMIT
           VERSION=${{ steps.setup-docker-make.outputs.version }}
           CGO_ENABLED=1
-          BASE_VARIANT=${{ env.BASE_DEBIAN_DISTRO }}
           GO_VERSION=${{ env.GO_VERSION }}
         load: false
 
